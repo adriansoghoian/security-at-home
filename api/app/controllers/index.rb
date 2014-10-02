@@ -1,3 +1,3 @@
 get "/" do
-  return 'hello world, you fuckers!'
+  return 'hello world'
 end

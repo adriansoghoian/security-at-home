@@ -1,5 +1,5 @@
 <div id="regids">
-	<% Regid.all do |id| %>
+	<% Regid.all.each do |id| %>
 		<div><%= id.regid %></div>
 	<% end %>
 </div>

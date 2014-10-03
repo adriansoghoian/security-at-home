@@ -13,4 +13,14 @@ gem 'thin'
 
 gem 'activesupport', '~>4.1'
 gem 'activerecord', '~>4.1'
-gem 'pusher'
+
+gem 'rake'
+gem 'rspec'
+
+gem 'shotgun'
+gem 'bcrypt'
+
+group :test do
+  gem 'faker'
+  gem 'rspec'
+end

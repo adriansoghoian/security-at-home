@@ -7,19 +7,19 @@ require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
 
 # Require gems we care about
 require 'rubygems'
+
 require 'uri'
 require 'pathname'
+
 require 'pg'
 require 'active_record'
 require 'logger'
+require 'rake'
+
 require 'sinatra'
 require "sinatra/reloader" if development?
-require 'erb'
-require 'pusher'
 
-Pusher.app_id = '91619'
-Pusher.key = 'ffe5ee7ae2e4a3383fd4'
-Pusher.secret = '8b0181ee345e95502f4a'
+require 'erb'
 
 # Some helper constants for path-centric logic
 APP_ROOT = Pathname.new(File.expand_path('../../', __FILE__))

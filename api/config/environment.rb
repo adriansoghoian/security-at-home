@@ -15,6 +15,11 @@ require 'logger'
 require 'sinatra'
 require "sinatra/reloader" if development?
 require 'erb'
+require 'pusher'
+
+Pusher.app_id = '91619'
+Pusher.key = 'ffe5ee7ae2e4a3383fd4'
+Pusher.secret = '8b0181ee345e95502f4a'
 
 # Some helper constants for path-centric logic
 APP_ROOT = Pathname.new(File.expand_path('../../', __FILE__))

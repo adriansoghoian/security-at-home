@@ -1,11 +1,10 @@
 class CreateNotifications < ActiveRecord::Migration
   def change
   	create_table :notifications do |t|
-			t.string :regid
-			t.string :url
-			t.string :api_key
+  		t.references :user
+  		t.text :message
 
-			t.timestamps
+  		t.timestamps
   	end
   end
 end

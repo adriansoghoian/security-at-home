@@ -1,3 +1,4 @@
+__author__ = "Adrian Soghoian & Omar Ahmad"
 import requests
 from splinter import Browser
 

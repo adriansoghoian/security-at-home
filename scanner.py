@@ -1,3 +1,5 @@
+__author__ = "Adrian Soghoian & Omar Ahmad"
+
 import os,sys,subprocess
 
 	"""

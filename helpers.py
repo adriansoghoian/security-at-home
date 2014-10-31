@@ -23,7 +23,6 @@ def ip_cidr():
         if netifaces.AF_INET in netifaces.ifaddresses(iface):
             add_info = netifaces.ifaddresses(iface)[netifaces.AF_INET]
             for addresses in add_info:
-                print(add_info)
                 if addresses['addr'].startswith('10.') or \
                     addresses['addr'].startswith('192.168.') or \
                     (addresses['addr'].startswith('172.') and int(addresses['addr'].split('.')[1]) in range(16,32)):

@@ -5,14 +5,18 @@ get "/" do
 end
 
 post "/register" do
-	regid = Regid.create(regid: params["Reg Id"])
+	@user = User.create(regid: params["Reg Id"])
+	@notification = Notification.create(message: "Welcome! You've successfuly registered.")
+	@user.notifications << @notification
+	@user.notify(@notification)
 end
 
-post "/notify" do 
-	gcm = GCM.new(ENV['GOOGLE'])
-	registration_ids = [Regid.all.last.regid]
-	options = {data: {title: "YOUR WIFI SUCKS!!"}}
-	gcm.send(registration_ids, options)
+post "/refresh" do
+	regid = params["Reg Id"]
+	@user = User.find_by_regid(regid)
+	## Create a notification object based on vulnerabilities
+	## @user.notifications << @notification 
+	## @user.notify(@notification) 
 end
 
 get "/regids" do 

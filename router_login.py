@@ -1,5 +1,3 @@
-__author__ = 'oza'
-
 import requests
 from splinter import Browser
 
@@ -21,9 +19,9 @@ def testDIR605L():
          else:
              return False
 
-
-if (testDIR605L()):
-    print 'This would work if we had Interwebz'
-    r = requests.post("http://finch-security.herokuapp.com/notify")
-else:
-    print 'Did not log in'
+def check_router():
+    if (testDIR605L()):
+        print 'This would work if we had Interwebz'
+        r = requests.post("http://finch-security.herokuapp.com/notify")
+    else:
+        print 'Did not log in'

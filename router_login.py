@@ -4,7 +4,7 @@ from splinter import Browser
 
 ## Functions for dealing with default router logins
 
-
+def parse_info
 
 
 

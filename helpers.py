@@ -7,18 +7,11 @@ __author__ = 'oza'
 import netifaces
 import netaddr
 
-def ip_cidr():
-    """
-    Will calculate a CIDR-based IP address using the active interface's IP.
-    Checking for IPs within the private network range, and that contain field AF_INET,
-    and have a broadcast address, subnet mask, and IP address.
-    (Virtual interfaces may be assigned a broadcast and IP address, and may also be active
-    :return:String
-    """
 
-    global address
-    global netmask
+global address
+global netmask
 
+def get_ip():
     for iface in netifaces.interfaces():
         if netifaces.AF_INET in netifaces.ifaddresses(iface):
             add_info = netifaces.ifaddresses(iface)[netifaces.AF_INET]
@@ -29,9 +22,19 @@ def ip_cidr():
                         if 'netmask' in addresses and 'addr' in addresses and 'broadcast' in addresses :
                             netmask = addresses['netmask']
                             address = addresses['addr']
+    return address,netmask
 
+def ip_cidr():
+    """
+    Will calculate a CIDR-based IP address using the active interface's IP.
+    Checking for IPs within the private network range, and that contain field AF_INET,
+    and have a broadcast address, subnet mask, and IP address.
+    (Virtual interfaces may be assigned a broadcast and IP address, and may also be active
+    :return:String
+    """
 
-    cidr = netaddr.IPNetwork('%s/%s' % (address, netmask))
+    ip_vals = get_ip()
+    cidr = netaddr.IPNetwork('%s/%s' % (ip_vals[0], ip_vals[1]))
     return str(cidr.network) + '/' + str(cidr).split('/')[1]
 
 if __name__ == "__main__":

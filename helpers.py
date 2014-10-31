@@ -6,9 +6,13 @@ __author__ = 'oza'
 
 import netifaces
 import netaddr
-
 global address
 global netmask
+
+def get_default_credentials():
+    credentials = [ ('admin', '') ]
+    return credentials
+
 
 def get_ip():
     for iface in netifaces.interfaces():

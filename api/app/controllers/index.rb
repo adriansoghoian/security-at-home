@@ -12,11 +12,7 @@ post "/register" do
 end
 
 post "/refresh" do
-	regid = params["Reg Id"]
-	@user = User.find_by_regid(regid)
-	## Create a notification object based on vulnerabilities
-	## @user.notifications << @notification 
-	## @user.notify(@notification) 
+	p params
 end
 
 get "/regids" do 

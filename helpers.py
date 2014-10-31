@@ -7,7 +7,6 @@ __author__ = 'oza'
 import netifaces
 import netaddr
 
-
 global address
 global netmask
 
@@ -32,7 +31,6 @@ def ip_cidr():
     (Virtual interfaces may be assigned a broadcast and IP address, and may also be active
     :return:String
     """
-
     ip_vals = get_ip()
     cidr = netaddr.IPNetwork('%s/%s' % (ip_vals[0], ip_vals[1]))
     return str(cidr.network) + '/' + str(cidr).split('/')[1]

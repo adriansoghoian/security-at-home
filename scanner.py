@@ -1,7 +1,7 @@
-import helpers
-
 __author__ = "Adrian Soghoian & Omar Ahmad"
+
 import os, sys, subprocess, socket
+import helpers
 from IPy import IP
 
 """
@@ -17,45 +17,37 @@ def scan_network(host):
 	os_strings = [ "Windows", "Apple", "IOS", "Linux", "Unknow" ]
 	win, apple, linux, ios, unknow = [ (os_strings[i], 0) for i in range(len(os_strings)) ]
 	os_count = [ win, apple, linux, ios, unknow ]
+	devices = []
 
-    scan = subprocess.Popen(["nmap", "-PE","-PP","-PS21,22,23,25,80,443,3306,3389,8080", str(host)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
-    scanlist = scan.split()
-
-    for i, each in enumerate(os_count):
-    	os = each[0]
-    	count = scanlist.count(os)
-
-    	if os == "Windows":
-    		os_count[i][1] = count
-    	elif os == "Apple":
-    		os_count[i][1] = count
-    	elif os == "Linux":
-    		os_count[i][1] = count
-    	else:
-    		os_count[i][1] = count
-
-    return os_count
-
-def scan_device():
-	"""
-	Conducts port scan of a specific device. 
-	"""
+	scan = subprocess.Popen(["nmap", "-PR", str(host)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
+	scanlist = scan.split()
+	if scanlist.count("up") > 0:
+		indices = [i + 2 for i, x in enumerate(scanlist) if x == "report"]
+		ip_list = [ scanlist[i] for i in indices ]
 	
+	for ip in ip_list:
+		devices.append(scan_device(ip))
+	print devices
+	return devices
 
+def scan_device(ip):
+	"""
+	Generates an OS fingerprint for a given host. 
+	"""
+	scan = subprocess.Popen(["nmap", "-O", str(ip)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
+	scanlist = scan.split()
+	os_index = scanlist.index("Running:") + 1
 
-	return True
+	if scanlist[os_index] == "Windows":
+		return "Windows"
+	elif scanlist[os_index] == "Apple":
+		return "Apple"
+	elif scanlist[os_index] == "Linux":
+		return "Linux"
+	else:
+		return "Unknow"
 
-def get_network_ip():
-	# s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	# s.connect(("finch.com",80))
-	# ip = s.getsockname()[0]
+if __name__ == "__main__":
 	ip = helpers.ip_cidr()
-	# s.close()
-	return ip
-
-def check_network():
-	return True
-
-ip = get_network_ip()
-scan_network(ip)
+	scan_network(ip)
 

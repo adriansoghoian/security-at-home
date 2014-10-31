@@ -2,6 +2,12 @@ __author__ = "Adrian Soghoian & Omar Ahmad"
 import requests
 from splinter import Browser
 
+## Functions for dealing with default router logins
+
+
+
+
+
 #Variables for DIR-605L
 
 user= 'admin' #not used here

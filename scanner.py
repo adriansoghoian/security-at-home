@@ -1,3 +1,5 @@
+import helpers
+
 __author__ = "Adrian Soghoian & Omar Ahmad"
 import os, sys, subprocess, socket
 from IPy import IP
@@ -22,7 +24,7 @@ def get_network_ip():
 	# s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	# s.connect(("finch.com",80))
 	# ip = s.getsockname()[0]
-	ip = "192.168.0.0/24"
+	ip = helpers.ip_cidr()
 	# s.close()
 	return ip
 

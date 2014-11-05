@@ -1,7 +1,7 @@
 require 'gcm'
 
 get "/" do
-	return "hello world!! You may need to upgrade your home network security ;)" 
+	erb :index_age
 end
 
 post "/register" do

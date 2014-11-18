@@ -1,8 +1,7 @@
 __author__ = "Adrian Soghoian & Omar Ahmad"
+
 from router_login import is_router_secure
-import scanner
-import requests
-import helpers
+import scanner, requests, helpers
 
 def update_server(os_list, router_secure):
 	if router_secure:
@@ -14,10 +13,15 @@ def update_server(os_list, router_secure):
 	payload = {'router_status': router_status, 'key2': os_list}
 	requests.post("http://finch-security.herokuapp.com/refresh", data=payload)
 
-if __name__ == "__main__":
-	router_secure = is_router_secure()
-
+def generate_report():
+	router_status = is_router_secure()
 	ip = helpers.ip_cidr()
+	hosts = scanner.scan_network(ip)
+
+if __name__ == "__main__":
+	generate_report()
+
+
 	os_list = scanner.scan_network(ip)
 
 	update_server(os_list, router_secure)

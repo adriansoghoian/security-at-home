@@ -4,6 +4,9 @@ import helpers
 from splinter import Browser 
 
 def is_router_secure():
+    """
+    Returns a boolean indicating whether the user has updated their default login credentials. 
+    """
     credentials = helpers.get_default_credentials()[0]
 
     with Browser('phantomjs') as browser:

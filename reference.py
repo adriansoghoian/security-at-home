@@ -1,0 +1,1 @@
+OS_TYPES = { "apple": "Mac OS X" }

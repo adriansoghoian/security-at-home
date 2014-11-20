@@ -20,8 +20,6 @@ def generate_report():
 
 if __name__ == "__main__":
 	generate_report()
-
-
 	os_list = scanner.scan_network(ip)
 
 	update_server(os_list, router_secure)

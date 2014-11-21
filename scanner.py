@@ -78,11 +78,3 @@ def scan_device(ip):
 				os_type = reference.OS_TYPES[each]
 
 	return models.Host(os_type, manufacturer, mac_address)
-
-if __name__ == "__main__":
-	# ip = helpers.ip_cidr()
-	# scan_network(ip)
-	ip = "10.144.1.142" # Omar's computer
-	host = scan_device(ip)
-	host.display_summary()
-

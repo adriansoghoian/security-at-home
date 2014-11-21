@@ -1,7 +1,8 @@
 __author__ = "Adrian Soghoian & Omar Ahmad"
 
 from router_login import is_router_secure
-import scanner, requests, helpers
+import scanner, models, helpers
+import requests, datetime 
 
 def update_server(os_list, router_secure):
 	if router_secure:
@@ -13,13 +14,31 @@ def update_server(os_list, router_secure):
 	payload = {'router_status': router_status, 'key2': os_list}
 	requests.post("http://finch-security.herokuapp.com/refresh", data=payload)
 
-def generate_report():
-	router_status = is_router_secure()
-	ip = helpers.ip_cidr()
-	hosts = scanner.scan_network(ip)
+def write_report(hosts): ## TODO - write method that generates text file. 
+	"""
+	Overall method that constructs the summary document. 
+	"""
+	date = datetime.datetime.now()
+	title = "Canary Security at Home: " + str(date)
+	f = open(title, 'w')
+
+	# Summary
+	f.write("Hello. You have this many devices connected to your network: %s" % (models.Host.return_num_hosts()))
+	f.write("\n")
+	f.write("\n")
+
+	# Host-specific information
+	for each in hosts:
+		os, mac, manufacturer, ports = each.os, each.mac_address, each.manufacturer, each.open_ports
+		f.write("Here is a summary for a connected device with MAC address: %s." % (mac))
+		f.write("\n")
+		f.write("It's OS is %s. It's manufacturer is %s. It has this many open ports: %s." % (os, manufacturer, ports))
+		f.close()
 
 if __name__ == "__main__":
-	generate_report()
-	os_list = scanner.scan_network(ip)
 
-	update_server(os_list, router_secure)
+	ip = "10.144.1.142" # Omar's computer
+	host = scanner.scan_device(ip)
+	host.display_summary()
+	write_report([host])
+

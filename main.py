@@ -5,6 +5,9 @@ import scanner, models, helpers
 import requests, datetime 
 
 def update_server(os_list, router_secure):
+	"""
+	Legacy code. Remove at some point. 
+	"""
 	if router_secure:
 		router_status = "Secure"
 	else:
@@ -13,6 +16,13 @@ def update_server(os_list, router_secure):
 	os_list = "_".join(os_list)
 	payload = {'router_status': router_status, 'key2': os_list}
 	requests.post("http://finch-security.herokuapp.com/refresh", data=payload)
+
+def get_nvd_results(host):
+	manufacturer_str = host.manufacturer
+	if " " in manufacturer_str:
+		manufacturer_str = manufacturer_str.replace(" ", "+")
+	url = "https://web.nvd.nist.gov/view/vuln/search-results?query=%s&search_type=all&cves=on" % (manufacturer_str)
+	return url
 
 def write_report(hosts): ## TODO - write method that generates text file. 
 	"""

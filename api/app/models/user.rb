@@ -4,11 +4,10 @@ class User < ActiveRecord::Base
   has_many :notifications
 
   def notify(notification)
-	gcm = GCM.new(ENV['GOOGLE'])
-
-	registration_id = [self.regid]
-	message = {data: {title: notification.message}}
-	gcm.send(registration_ids, options)
+  	gcm = GCM.new(ENV['GOOGLE'])
+  	registration_id = [self.regid]
+  	message = {data: {title: notification.message}}
+  	gcm.send(registration_ids, options)
   end
 
   def refresh

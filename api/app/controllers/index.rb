@@ -1,7 +1,15 @@
 require 'gcm'
+require 'json'
+
+before do
+  headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+  headers['Access-Control-Allow-Origin'] = 'http://localhost:4567'
+  headers['Access-Control-Allow-Headers'] = 'accept, authorization, origin'
+  headers['Access-Control-Allow-Credentials'] = 'true'
+end
 
 get "/" do
-	return "hello world!! You may need to upgrade your home network security ;)" 
+	erb :index_age
 end
 
 post "/register" do
@@ -12,14 +20,20 @@ post "/register" do
 end
 
 post "/refresh" do
-	regid = params["Reg Id"]
-	@user = User.find_by_regid(regid)
-	## Create a notification object based on vulnerabilities
-	## @user.notifications << @notification 
-	## @user.notify(@notification) 
+	p params
 end
 
 get "/regids" do 
 	erb :regids
 end
 
+get "/testjson" do 
+	yo = {"test" => [ {"obj1" => 1}, {"obj2" => 2} ]}
+	sup = yo.to_json
+	return sup
+end
+
+post "/testjson" do 
+	p params
+	return "hello I'm sending data to you!"
+end

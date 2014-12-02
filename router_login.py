@@ -1,10 +1,11 @@
+import csv
+
 __author__ = "Adrian Soghoian & Omar Ahmad"
 import requests
 from splinter import Browser
 
 ## Functions for dealing with default router logins
 
-def parse_info
 
 
 

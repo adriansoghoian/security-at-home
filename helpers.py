@@ -6,10 +6,28 @@ __author__ = 'oza'
 
 import netifaces
 import netaddr
+import csv
+
+
+def parse_info():
+    """
+    Takes the password list and parses
+    :return:listOfTuples
+    """
+    pw_list = []
+    with open('ref/Passwords.csv','r') as pwfile:
+        pwread = csv.reader(pwfile,delimiter=',')
+        for row in pwread:
+            pw_list.append(tuple(row));
+    return pw_list
+
+
 
 
 global address
 global netmask
+
+
 
 def get_ip():
     for iface in netifaces.interfaces():
@@ -39,3 +57,4 @@ def ip_cidr():
 
 if __name__ == "__main__":
     print ip_cidr()
+    print parse_info()

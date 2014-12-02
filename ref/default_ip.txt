@@ -1,0 +1,44 @@
+Router Manufacturers	Default IP Addresses
+3Com	192.168.1.1
+Apple	10.0.1.1
+Asus	192.168.1.1
+Asus	192.168.1.220
+Belkin	192.168.2.1
+Belkin	10.1.1.1
+Buffalo	192.168.11.1
+Dell	192.168.1.1
+D-Link	192.168.0.1
+D-Link	192.168.0.30
+D-Link	192.168.0.50
+D-Link	192.168.1.1
+D-Link	10.1.1.1
+Linksys	192.168.0.1
+Linksys	192.168.1.1
+Microsoft	192.168.2.1
+Motorola	192.168.10.1
+Motorola	192.168.20.1
+Motorola	192.168.30.1
+Motorola	192.168.62.1
+Motorola	192.168.100.1
+Motorola	192.168.102.1
+Motorola	192.168.1.254
+MSI	192.168.1.254
+Netgear	192.168.0.1
+Netgear	192.168.0.227
+Senao	192.168.0.1
+SpeedTouch	10.0.0.138
+SpeedTouch	192.168.1.254
+Trendnet	192.168.0.1
+Trendnet	192.168.1.1
+Trendnet	192.168.2.1
+Trendnet	192.168.10.1
+U.S. Robotics	192.168.1.1
+U.S. Robotics	192.168.2.1
+U.S. Robotics	192.168.123.254
+Zyxel	192.168.1.1
+Zyxel	192.168.2.1
+Zyxel	192.168.4.1
+Zyxel	192.168.10.1
+Zyxel	192.168.1.254
+Zyxel	10.0.0.2
+Zyxel	192.168.0.138

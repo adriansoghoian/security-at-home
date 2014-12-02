@@ -6,7 +6,6 @@ __author__ = 'oza'
 
 import netifaces
 import netaddr
-<<<<<<< HEAD
 import csv
 
 
@@ -28,15 +27,9 @@ def parse_info():
 global address
 global netmask
 
-=======
-global address
-global netmask
-
 def get_default_credentials():
     credentials = [ ('admin', '') ]
     return credentials
->>>>>>> FETCH_HEAD
-
 
 def get_ip():
     for iface in netifaces.interfaces():

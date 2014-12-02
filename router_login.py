@@ -9,10 +9,6 @@ def is_router_secure():
     """
     Returns a boolean indicating whether the user has updated their default login credentials. 
     """
-    credentials = helpers.get_default_credentials()[0]
-
-<<<<<<< HEAD
-
 
 
 #Variables for DIR-605L
@@ -21,8 +17,7 @@ user= 'admin' #not used here
 pw = '' #YAY! encoding nothing!, for now
 fake_pw = 'fadsas' #need to try something that doesn't work, to compare the results
 def testDIR605L():
-=======
->>>>>>> FETCH_HEAD
+    credentials = helpers.get_default_credentials()[0]
     with Browser('phantomjs') as browser:
         url = 'http://192.168.0.1/'
         try:

@@ -15,11 +15,13 @@ def parse_info():
     """
     pw_list = []
     with open('ref/Passwords.csv','r') as pwfile:
-        pwread = csv.reader(pwfile,delimiter=',')
+        pwread = csv.reader(pwfile)
         for row in pwread:
-            pw_list.append(tuple(row));
-    return pw_list
-
+            if row[3:5]:
+                if row[3] == 'HTTP':
+                    pw_list.append(tuple(row[0:6]));
+    return pw_list[3:]
+    
 global address
 global netmask
 
@@ -40,6 +42,11 @@ def get_ip():
                             address = addresses['addr']
     return address,netmask
 
+def get_gateway():
+    ip_vals = get_ip()
+    if netifaces.gateways()['default'][netifaces.AF_INET]:
+        return netifaces.gateways()['default'][netifaces.AF_INET][0]
+
 def ip_cidr():
     """
     Will calculate a CIDR-based IP address using the active interface's IP.
@@ -55,3 +62,4 @@ def ip_cidr():
 if __name__ == "__main__":
     print ip_cidr()
     print parse_info()
+    print get_gateway()

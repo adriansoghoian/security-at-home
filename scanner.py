@@ -54,16 +54,19 @@ def extract_ports(scanlist):
 	if " are closed" in scan:
 		return []
 	else:
+		port_index = 
 		return ["3000"]
 
 def scan_device(ip):
 	"""
 	Generates an OS fingerprint for a given host. 
 	"""
-	scan = subprocess.Popen(["nmap", "-O", str(ip)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
+	scan = subprocess.Popen(["nmap", "-sS", str(ip)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
 	scanlist = scan.split()
 	print scan
 
+	if "Host seems down" in scan:
+		return models.Host(is_down=True)
 	mac_address = extract_mac_address(scanlist)
 	manufacturer = extract_manufacturer(scanlist)
 	ports = extract_ports(scanlist)

@@ -29,7 +29,7 @@ def write_report(hosts): ## TODO - write method that generates text file.
 	Overall method that constructs the summary document. 
 	"""
 	date = datetime.datetime.now()
-	title = "Canary Security at Home: " + str(date)
+	title = "reports/" + str(date)
 	f = open(title, 'w')
 
 	# Summary
@@ -46,8 +46,7 @@ def write_report(hosts): ## TODO - write method that generates text file.
 		f.close()
 
 if __name__ == "__main__":
-
-	ip = "10.144.1.142" # Omar's computer
+	ip = "10.128.4.147" # Omar's computer
 	host = scanner.scan_device(ip)
 	host.display_summary()
 	write_report([host])

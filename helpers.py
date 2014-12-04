@@ -8,7 +8,6 @@ import netifaces
 import netaddr
 import csv
 
-
 def parse_info():
     """
     Takes the password list and parses
@@ -20,9 +19,6 @@ def parse_info():
         for row in pwread:
             pw_list.append(tuple(row));
     return pw_list
-
-
-
 
 global address
 global netmask

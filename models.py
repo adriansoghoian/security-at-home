@@ -3,12 +3,13 @@ import reference
 class Host:
 	count = 0
 
-	def __init__(self, os="Unknown", manufacturer="Unknown", mac_address="Unknown", open_ports=[]):
+	def __init__(self, os="Unknown", manufacturer="Unknown", mac_address="Unknown", open_ports=[], is_down=False):
 		self.os = os
 		self.manufacturer = manufacturer
 		self.open_ports = open_ports
 		self.mac_address = mac_address
 		self.is_router = False
+		self.is_down = False
 		Host.count += 1
 
 	def add_port(self, port):

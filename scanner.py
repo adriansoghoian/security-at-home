@@ -14,6 +14,8 @@ def scan_network(range, gateway="Unknown"):
 	This method scans a given IP range and collects information on all of the hosts currently
 	connected, along with their OS. 
 	"""
+
+	ip_list = []
 	devices = []
 	scan = subprocess.Popen(["nmap", "-PR", str(range)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
 	scanlist = scan.split()

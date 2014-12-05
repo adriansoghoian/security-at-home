@@ -42,47 +42,58 @@ class Report:
 		Story.append(Paragraph(string, self.styles['Normal']))
 		Story.append(Spacer(2, 12))
 
-		string = "<font size=16><b>Your devices:</b></font>"
-		Story.append(Paragraph(string, self.styles['Normal']))
-		Story.append(Spacer(1, 16))
+		sorted(self.hosts, key=type, reverse=True)
 
-		for host in self.hosts:
-			string ="<font size=12><b>MAC Address:</b> " + host.mac_address
-			Story.append(Paragraph(string, self.styles['Normal']))
-			Story.append(Spacer(1, 12))
+		for i, host in enumerate(self.hosts):
+			if host.mac_address != "Unknown":
+				if i == 0:
+					string = "<font size=16><b>Your router:</b></font>"
+					Story.append(Paragraph(string, self.styles['Normal']))
+					Story.append(Spacer(1, 16))
+					string = "<font size=12><b>Admin Page Status: </b>" + "TBD</font>"
 
-			string = "<font size=12><b>IP Address:</b> " + host.ip
-			Story.append(Paragraph(string, self.styles['Normal']))
-			Story.append(Spacer(1, 12))
+				if i == 1: 
+					string = "<font size=16><b>Your devices:</b></font>"
+					Story.append(Paragraph(string, self.styles['Normal']))
+					Story.append(Spacer(1, 16))
 
-			string = "<font size=12><b>Manufacturer:</b> " + host.manufacturer
-			Story.append(Paragraph(string, self.styles['Normal']))
-			Story.append(Spacer(1, 12))
-
-			if host.manufacturer != "Unknown":
-				string = """<font size=12><b>Major issues associated with manufacturer:</b> 
-						 Please check out the <a href='%s' color='blue'>National Vulnerability 
-						 Database</a> for a list of current issues related to %s products.
-						 """ % (Report.get_nvd_url(host), host.manufacturer)
+				string ="<font size=12><b>MAC Address:</b> " + host.mac_address
 				Story.append(Paragraph(string, self.styles['Normal']))
 				Story.append(Spacer(1, 12))
 
-			string = "<font size=12><b>Number of open ports:</b> " + str(len(host.open_ports)) + ". "
-			if len(host.open_ports) > 0:
-				string += "Please seek ways to close more ports. "
+				string = "<font size=12><b>IP Address:</b> " + host.ip + "</font>"
 				Story.append(Paragraph(string, self.styles['Normal']))
 				Story.append(Spacer(1, 12))
-				port_data = [["NUMBER", "SERVICE", "NOTES"]]
-				for port in host.open_ports:
-					row = []
-					row.append(port.number)
-					row.append(port.port_status)
-					row.append("TBD")
-					port_data.append(row)
-				port_table = Table(port_data)
-				Story.append(port_table)
-				Story.append(Spacer(3, 12))
-			Story.append(Paragraph("##################################", self.styles['Normal']))
+
+				string = "<font size=12><b>Manufacturer:</b> " + host.manufacturer + "</font>"
+				Story.append(Paragraph(string, self.styles['Normal']))
+				Story.append(Spacer(1, 12))
+
+				if host.manufacturer != "Unknown":
+					string = """<font size=12><b>Major issues associated with manufacturer:</b> 
+							 Please check out the <a href='%s' color='blue'>National Vulnerability 
+							 Database</a> for a list of current issues related to %s products.</font>
+							 """ % (Report.get_nvd_url(host), host.manufacturer)
+					Story.append(Paragraph(string, self.styles['Normal']))
+					Story.append(Spacer(1, 12))
+
+				string = "<font size=12><b>Number of open ports:</b> " + str(len(host.open_ports)) + ".</font>" 
+				if len(host.open_ports) > 0:
+					string += "Please seek ways to close more ports. " 
+					Story.append(Paragraph(string, self.styles['Normal']))
+					Story.append(Spacer(1, 12))
+					port_data = [["NUMBER", "SERVICE", "NOTES"]]
+					for port in host.open_ports:
+						row = []
+						row.append(port.number)
+						row.append(port.port_status)
+						row.append("TBD")
+						port_data.append(row)
+					port_table = Table(port_data)
+					Story.append(port_table)
+					Story.append(Spacer(3, 12))
+				if i > 0:
+					Story.append(Paragraph("###########################################", self.styles['Normal']))
 		self.template.build(Story)
 
 class Host:
@@ -120,8 +131,9 @@ class Host:
 
 class Router(Host):
 
-	def __init__(self, os="Unknown", ip="Unknown", manufacturer="Unknown", mac_address="Unknown", open_ports=[], is_down=False):
+	def __init__(self, is_secured=False, os="Unknown", ip="Unknown", manufacturer="Unknown", mac_address="Unknown", open_ports=[], is_down=False):
 		Host.__init__(self, os, ip, manufacturer, mac_address, open_ports, is_down)
+		self.is_secured = is_secured
 
 class Port:
 

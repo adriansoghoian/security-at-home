@@ -17,14 +17,17 @@ def update_server(os_list, router_secure):
 	payload = {'router_status': router_status, 'key2': os_list}
 	requests.post("http://finch-security.herokuapp.com/refresh", data=payload)
 
-def main(): ## TODO - write method that generates text file. 
+def main(): 
 	"""
 	Overall method.  
 	"""
 	ip_range = helpers.ip_cidr()
-	print ip_range
+	gateway_ip = helpers.get_gateway()
 
-	active_hosts = scanner.scan_network(ip_range)
+	active_hosts = scanner.scan_network(ip_range, gateway=gateway_ip)
+	print len(active_hosts)
+	for each in active_hosts:
+		print each
 	# host = scanner.scan_device(ip)
 	report = models.Report(active_hosts)
 	report.generate()

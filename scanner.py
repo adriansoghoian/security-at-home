@@ -9,13 +9,12 @@ This subsystem contains functionality to scan the local network for connected
 devices, their OS fingerprints, and any open ports that they may have. 
 """
 
-def scan_network(range):
+def scan_network(range, gateway="Unknown"):
 	"""
 	This method scans a given IP range and collects information on all of the hosts currently
 	connected, along with their OS. 
 	"""
 	devices = []
-
 	scan = subprocess.Popen(["nmap", "-PR", str(range)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
 	scanlist = scan.split()
 	if scanlist.count("up") > 0:
@@ -23,7 +22,7 @@ def scan_network(range):
 		ip_list = [ scanlist[i] for i in indices ]
 	
 	for ip in ip_list:
-		devices.append(scan_device(ip))
+		devices.append(scan_device(ip, gateway))
 	return devices
 
 def extract_manufacturer(scanlist):
@@ -59,8 +58,10 @@ def extract_ports(scan):
 		ports = []
 		scanlist = scan.split()
 		index_start = scanlist.index("SERVICE") + 1
-		index_end = scanlist.index("MAC")
-
+		try:
+			index_end = scanlist.index("MAC")
+		except ValueError:
+			index_end = scanlist[index_start:].index("Nmap")
 		i = index_start
 		while i < index_end:
 			ports.append(models.Port(scanlist[i].rpartition("/")[0], scanlist[i + 1], scanlist[i + 2]))
@@ -76,7 +77,7 @@ def extract_ip(scan):
 	ip = scanlist[scanlist.index("report") + 2]
 	return ip
 
-def scan_device(ip):
+def scan_device(ip, gateway):
 	"""
 	Generates an OS fingerprint for a given host. 
 	"""
@@ -99,5 +100,6 @@ def scan_device(ip):
 		for each in reference.OS_TYPES:
 			if each in scan:
 				os_type = reference.OS_TYPES[each]
-
+	if ip == gateway:
+		return models.Router(os=os_type, ip=ip, manufacturer=manufacturer, mac_address=mac_address, open_ports=ports)
 	return models.Host(os=os_type, ip=ip, manufacturer=manufacturer, mac_address=mac_address, open_ports=ports)

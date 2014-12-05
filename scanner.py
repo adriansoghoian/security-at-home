@@ -46,30 +46,39 @@ def extract_mac_address(scanlist):
 	mac_address = scanlist[mac_address_index]
 	return mac_address.strip()
 
-def extract_ports(scanlist):
+def extract_ports(scan):
 	"""
 	Extracts port information from the scan output. 
 	"""
-	scan = " ".join(scanlist)
 	if " are closed" in scan:
 		return []
 	else:
-		port_index = 
-		return ["3000"]
+		ports = []
+		scanlist = scan.split()
+		index_start = scanlist.index("SERVICE") + 1
+		index_end = scanlist.index("MAC")
+
+		i = index_start
+		while i < index_end:
+			ports.append(models.Port(scanlist[i].rpartition("/")[0], scanlist[i + 1], scanlist[i + 2]))
+			i += 3
+		len(ports)
+		return ports
 
 def scan_device(ip):
 	"""
 	Generates an OS fingerprint for a given host. 
 	"""
-	scan = subprocess.Popen(["nmap", "-sS", str(ip)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
+	scan = subprocess.Popen(["nmap", "-sS", str(ip)],stdout=subprocess.PIPE, stderr=subprocess.PIPE, ).communicate()[0]
 	scanlist = scan.split()
 	print scan
 
-	if "Host seems down" in scan:
+	if "Host is up" not in scan:
 		return models.Host(is_down=True)
 	mac_address = extract_mac_address(scanlist)
+	print mac_address
 	manufacturer = extract_manufacturer(scanlist)
-	ports = extract_ports(scanlist)
+	ports = extract_ports(scan)
 
 	try:
 		os_index = scanlist.index("Running:") + 1
@@ -80,4 +89,4 @@ def scan_device(ip):
 			if each in scan:
 				os_type = reference.OS_TYPES[each]
 
-	return models.Host(os_type, manufacturer, mac_address)
+	return models.Host(os=os_type, manufacturer=manufacturer, mac_address=mac_address, open_ports=ports)

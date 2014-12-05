@@ -3,6 +3,7 @@ __author__ = "Adrian Soghoian & Omar Ahmad"
 from router_login import is_router_secure
 import scanner, models, helpers
 import requests, datetime 
+import models
 
 def update_server(os_list, router_secure):
 	"""
@@ -28,22 +29,8 @@ def write_report(hosts): ## TODO - write method that generates text file.
 	"""
 	Overall method that constructs the summary document. 
 	"""
-	date = datetime.datetime.now()
-	title = "reports/" + str(date)
-	f = open(title, 'w')
-
-	# Summary
-	f.write("Hello. You have this many devices connected to your network: %s" % (models.Host.return_num_hosts()))
-	f.write("\n")
-	f.write("\n")
-
-	# Host-specific information
-	for each in hosts:
-		os, mac, manufacturer, ports = each.os, each.mac_address, each.manufacturer, each.open_ports
-		f.write("Here is a summary for a connected device with MAC address: %s." % (mac))
-		f.write("\n")
-		f.write("It's OS is %s. It's manufacturer is %s. It has this many open ports: %s." % (os, manufacturer, ports))
-		f.close()
+	report = models.Report(hosts)
+	report.generate()
 
 if __name__ == "__main__":
 	ip = "10.128.4.147" # Omar's computer

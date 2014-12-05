@@ -1,4 +1,5 @@
 import csv
+import re
 
 __author__ = "Adrian Soghoian & Omar Ahmad"
 import helpers
@@ -18,6 +19,8 @@ def is_router_secure():
 user= 'admin' #not used here
 pw = '' #YAY! encoding nothing!, for now
 fake_pw = 'fadsas' #need to try something that doesn't work, to compare the results
+
+
 def testDIR605L():
     credentials = helpers.get_default_credentials()[0]
     with Browser('phantomjs') as browser:
@@ -35,23 +38,61 @@ def testDIR605L():
             return True
 
 def testRouter():
+    global html
+    global soup
     with Browser('phantomjs') as browser:
         url = 'http://' + helpers.get_gateway()
         print url
         try:
             browser.visit(url)
+            html = browser.html
             soup = BeautifulSoup(browser.html)
-            print soup.form.find_all('input')
-            print soup.find(value='admin') #if value is there for admin, but field is hidden, don't touch it
-            for ids in soup.form.find_all('input'):
-                if ids.get('type') != 'hidden':
-                    print ids.get('id'),' ',ids.get('type')
-
+            print soup.find_all('input')
+            print soup.find_all('form')
 
         except:
             print "Probing the router admin page failed; perhaps the URL is incorrect."
             return True
+    return None
 
+def input_fields():
+    input_fields = []
+    for inputs in soup.form.find_all('input'):
+        if inputs.get('type') != 'hidden':
+            input_fields.append(inputs.get('id'))
+    return input_fields
+
+
+def option_field():
+    select = []
+    for options in soup.find_all('select'):
+        select.append(options.get('name'))
+        option_values = []
+        for option in options.find_all('option'):
+            option_values.append(option.get('value'))
+        select.append(option_values)
+    return select
+
+
+def user_field(user_name):
+    return None
+
+
+
+def pw_field(pw):
+    return None
+
+def find_model():
+    model_cand = []
+    regex = re.compile('[^a-zA-Z0-9]')
+    html_parse = regex.sub('',html.lower())
+    for model in helpers.get_models():
+        if model in html_parse:
+            model_cand.append(model)
+    return model_cand
 
 if __name__ == "__main__":
     testRouter()
+    print option_field()
+    print input_fields()
+    print find_model()

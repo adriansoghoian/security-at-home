@@ -92,7 +92,7 @@ class Report:
 					port_table = Table(port_data)
 					Story.append(port_table)
 					Story.append(Spacer(3, 12))
-				if i > 0:
+				if i > 0 and i < len(self.hosts) - 1:
 					Story.append(Paragraph("###########################################", self.styles['Normal']))
 		self.template.build(Story)
 

@@ -22,7 +22,9 @@ def main():
 	Overall method.  
 	"""
 	ip_range = helpers.ip_cidr()
+	print ip_range
 	gateway_ip = helpers.get_gateway()
+	print gateway_ip
 
 	active_hosts = scanner.scan_network(ip_range, gateway=gateway_ip)
 	print len(active_hosts)

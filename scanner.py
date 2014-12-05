@@ -14,9 +14,6 @@ def scan_network(range):
 	This method scans a given IP range and collects information on all of the hosts currently
 	connected, along with their OS. 
 	"""
-	os_strings = [ "Windows", "Apple", "IOS", "Linux", "Unknow" ]
-	win, apple, linux, ios, unknow = [ (os_strings[i], 0) for i in range(len(os_strings)) ]
-	os_count = [ win, apple, linux, ios, unknow ]
 	devices = []
 
 	scan = subprocess.Popen(["nmap", "-PR", str(range)],stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
@@ -33,18 +30,24 @@ def extract_manufacturer(scanlist):
 	"""
 	Pulls out the manufacturer name from the scan output. 
 	"""
-	index = scanlist.index("Address:") + 1
-	substring = " ".join(scanlist[index + 1:index + 5])
-	manufacturer = substring[substring.find("(") + 1:substring.find(")")]
-	return manufacturer.strip()
+	if "Address:" in "".join(scanlist):
+		index = scanlist.index("Address:") + 1
+		substring = " ".join(scanlist[index + 1:index + 5])
+		manufacturer = substring[substring.find("(") + 1:substring.find(")")]
+		return manufacturer.strip()
+	else:
+		return "Unknown"
 
 def extract_mac_address(scanlist):
 	"""
 	Extracts MAC address from the scan output. 
 	"""
-	mac_address_index = scanlist.index("Address:") + 1
-	mac_address = scanlist[mac_address_index]
-	return mac_address.strip()
+	if "Address:" in "".join(scanlist):
+		mac_address_index = scanlist.index("Address:") + 1
+		mac_address = scanlist[mac_address_index]
+		return mac_address.strip()
+	else:
+		return "Unknown"
 
 def extract_ports(scan):
 	"""
@@ -65,6 +68,14 @@ def extract_ports(scan):
 		len(ports)
 		return ports
 
+def extract_ip(scan):
+	"""
+	Grabs IP address from the Nmap scan output. 
+	"""
+	scanlist = scan.split()
+	ip = scanlist[scanlist.index("report") + 2]
+	return ip
+
 def scan_device(ip):
 	"""
 	Generates an OS fingerprint for a given host. 
@@ -76,9 +87,9 @@ def scan_device(ip):
 	if "Host is up" not in scan:
 		return models.Host(is_down=True)
 	mac_address = extract_mac_address(scanlist)
-	print mac_address
 	manufacturer = extract_manufacturer(scanlist)
 	ports = extract_ports(scan)
+	ip = extract_ip(scan)
 
 	try:
 		os_index = scanlist.index("Running:") + 1
@@ -89,4 +100,4 @@ def scan_device(ip):
 			if each in scan:
 				os_type = reference.OS_TYPES[each]
 
-	return models.Host(os=os_type, manufacturer=manufacturer, mac_address=mac_address, open_ports=ports)
+	return models.Host(os=os_type, ip=ip, manufacturer=manufacturer, mac_address=mac_address, open_ports=ports)

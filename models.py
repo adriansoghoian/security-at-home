@@ -2,7 +2,7 @@ import reference, datetime
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.enums import TA_JUSTIFY
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 
@@ -14,8 +14,17 @@ class Report:
 		self.title = str(datetime.datetime.now()) + ".pdf"
 		self.template = SimpleDocTemplate("reports/" + self.title,pagesize=letter,
                         rightMargin=72,leftMargin=72,
-                        topMargin=72,bottomMargin=18)
+                        topMargin=72,bottomMargin=18, 
+                        font ='Courier',fontSize=12)
 		self.styles = getSampleStyleSheet()
+
+	@classmethod
+	def get_nvd_url(cls, host):
+		manufacturer_str = host.manufacturer
+		if " " in manufacturer_str:
+			manufacturer_str = manufacturer_str.replace(" ", "+")
+		url = "https://web.nvd.nist.gov/view/vuln/search-results?query=%s&search_type=all&cves=on" % (manufacturer_str)
+		return url
 
 	def generate(self):
 		Story = []
@@ -38,25 +47,53 @@ class Report:
 		Story.append(Spacer(1, 16))
 
 		for host in self.hosts:
-			print host.number
-			string = "<font size=12><b>Number of open ports:</b> " + str(len(host.open_ports)) + ". "
-			if len(host.open_ports) > 0:
-				string += "Please seek ways to close more ports. "
+			string ="<font size=12><b>MAC Address:</b> " + host.mac_address
 			Story.append(Paragraph(string, self.styles['Normal']))
 			Story.append(Spacer(1, 12))
 
+			string = "<font size=12><b>IP Address:</b> " + host.ip
+			Story.append(Paragraph(string, self.styles['Normal']))
+			Story.append(Spacer(1, 12))
+
+			string = "<font size=12><b>Manufacturer:</b> " + host.manufacturer
+			Story.append(Paragraph(string, self.styles['Normal']))
+			Story.append(Spacer(1, 12))
+
+			if host.manufacturer != "Unknown":
+				string = """<font size=12><b>Major issues associated with manufacturer:</b> 
+						 Please check out the <a href='%s' color='blue'>National Vulnerability 
+						 Database</a> for a list of current issues related to %s products.
+						 """ % (Report.get_nvd_url(host), host.manufacturer)
+				Story.append(Paragraph(string, self.styles['Normal']))
+				Story.append(Spacer(1, 12))
+
+			string = "<font size=12><b>Number of open ports:</b> " + str(len(host.open_ports)) + ". "
+			if len(host.open_ports) > 0:
+				string += "Please seek ways to close more ports. "
+				Story.append(Paragraph(string, self.styles['Normal']))
+				Story.append(Spacer(1, 12))
+				port_data = [["NUMBER", "SERVICE", "NOTES"]]
+				for port in host.open_ports:
+					row = []
+					row.append(port.number)
+					row.append(port.port_status)
+					row.append("TBD")
+					port_data.append(row)
+				port_table = Table(port_data)
+				Story.append(port_table)
+				Story.append(Spacer(3, 12))
+			Story.append(Paragraph("##################################", self.styles['Normal']))
 		self.template.build(Story)
 
 class Host:
 	count = 0
 
-	def __init__(self, os="Unknown", ip="Unkown", manufacturer="Unknown", mac_address="Unknown", open_ports=[], is_down=False):
+	def __init__(self, os="Unknown", ip="Unknown", manufacturer="Unknown", mac_address="Unknown", open_ports=[], is_down=False):
 		self.os = os
 		self.ip = ip
 		self.manufacturer = manufacturer
 		self.open_ports = open_ports
 		self.mac_address = mac_address
-		self.is_router = False
 		self.is_down = False
 		Host.count += 1
 
@@ -81,10 +118,14 @@ class Host:
 			port_string = "None detected yet."
 		print "OS: ", self.os, ",manufacturer: ", self.manufacturer, ", MAC Address: ", self.mac_address, ", Ports: ", port_string
 
+class Router(Host):
+
+	def __init__(self, os="Unknown", ip="Unknown", manufacturer="Unknown", mac_address="Unknown", open_ports=[], is_down=False):
+		Host.__init__(self, os, ip, manufacturer, mac_address, open_ports, is_down)
+
 class Port:
 
 	def __init__(self, number, port_service, port_status):
-		self.number = number
 		self.number = number
 		self.port_service = port_service
 		self.port_status = port_status

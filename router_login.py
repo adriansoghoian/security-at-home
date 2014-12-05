@@ -1,9 +1,11 @@
 import csv
 
 __author__ = "Adrian Soghoian & Omar Ahmad"
-import requests
 import helpers
-from splinter import Browser 
+from splinter import Browser
+from bs4 import BeautifulSoup
+
+# instantiate the parser and fed it some HTML
 
 def is_router_secure():
     """
@@ -32,4 +34,24 @@ def testDIR605L():
             print "Probing the router admin page failed; perhaps the URL is incorrect."
             return True
 
+def testRouter():
+    with Browser('phantomjs') as browser:
+        url = 'http://' + helpers.get_gateway()
+        print url
+        try:
+            browser.visit(url)
+            soup = BeautifulSoup(browser.html)
+            print soup.form.find_all('input')
+            print soup.find(value='admin') #if value is there for admin, but field is hidden, don't touch it
+            for ids in soup.form.find_all('input'):
+                if ids.get('type') != 'hidden':
+                    print ids.get('id'),' ',ids.get('type')
 
+
+        except:
+            print "Probing the router admin page failed; perhaps the URL is incorrect."
+            return True
+
+
+if __name__ == "__main__":
+    testRouter()

@@ -7,6 +7,20 @@ __author__ = 'oza'
 import netifaces
 import netaddr
 import csv
+import re
+from uuid import getnode as get_mac
+
+def get_manufacturer():
+    mac = str(hex(get_mac()))[0:6]
+    man_list = []
+    print mac
+    regex = re.compile("(?P<mac_add>[0-9A-Fa-f]{6})\s*.*(?P<man_name>.*)")
+    with open('ref/oui.txt','r') as mac_file:
+        for row in mac_file:
+            m = regex.match(row)
+            if m:
+                man_list.append((m.group('mac_add'),(m.group('man_name'))))
+    return man_list
 
 def parse_info():
     """
@@ -17,11 +31,89 @@ def parse_info():
     with open('ref/Passwords.csv','r') as pwfile:
         pwread = csv.reader(pwfile)
         for row in pwread:
-            if row[3:5]:
-                if row[3] == 'HTTP':
-                    pw_list.append(tuple(row[0:6]));
-    return pw_list[3:]
-    
+            if row[4].lower() == 'n/a' or 'blank' in row[4].lower():
+                row[4] = ''
+            if row[5].lower() == 'n/a' or 'blank' in row[5].lower():
+                row[5] = ''
+            pw_list.append(tuple(row))
+    return pw_list
+
+def get_models():
+    parsed = parse_info()
+    regex = re.compile('[^a-zA-Z0-9]')
+    model_list = set()
+    for router in parsed:
+        if router[1]  != '':
+            model_list.add(regex.sub('',router[1].lower()))
+    return model_list
+
+
+def parse_default_ip():
+    """
+    Takes the default IP list and parses
+    :return:listOfTuples
+    """
+    ip_list = []
+    with open('ref/default_ip.txt','r') as ipfile:
+        ipread = csv.reader(ipfile, delimiter='\t')
+        ipread.next()
+        for row in ipread:
+            ip_list.append(tuple(row))
+    return ip_list
+
+def get_user_pw():
+    parsed = parse_info()
+    combos = set()
+    for router in parsed:
+        if [router[4],router[5]] not in router:
+            combos.add((router[4],router[5]))
+    return combos
+
+def get_user_pw_by_co(co_name,all_info=False):
+    parsed = parse_info()
+    regex = re.compile('[^a-zA-Z0-9]')
+    co_name = co_name.lower()
+    co_list = set()
+    print co_name
+    for router in parsed:
+        rtr_co = router[0].lower()
+        if (rtr_co == co_name
+            or rtr_co in co_name
+            or co_name in rtr_co):
+                if all_info:
+                    co_list.add(tuple(router))
+                else:
+                    co_list.add((router[4],router[5]))
+    if regex.search(co_name):
+        return co_list.union(get_user_pw_by_co(regex.sub('', co_name)))
+    return co_list
+
+def get_user_pw_by_model(model_name, co_name=None):
+    regex = re.compile('[^a-zA-Z0-9]')
+    model_name = regex.sub('', model_name.lower())
+    if co_name:
+        parsed = get_user_pw_by_co(co_name,True)
+    else:
+        parsed = parse_info()
+    for router in parsed:
+        rtr_name = regex.sub('',router[1].lower())
+        print model_name,' ',rtr_name
+        if (rtr_name != ''
+            and rtr_name == model_name):
+                return router[4],router[5]
+
+def get_ip_by_co(co_name):
+    ip_list = parse_default_ip()
+    co_ip = set()
+    co_name = co_name.lower()
+    for ip in ip_list:
+        ip_name = ip[0].lower()
+        if (ip_name == co_name
+            or ip_name in co_name
+            or co_name in ip_name):
+                co_ip.add((ip[4],ip[5]))
+    return co_ip
+
 global address
 global netmask
 
@@ -60,6 +152,18 @@ def ip_cidr():
     return str(cidr.network) + '/' + str(cidr).split('/')[1]
 
 if __name__ == "__main__":
-    print ip_cidr()
-    print parse_info()
-    print get_gateway()
+    # print ip_cidr()
+    # print parse_info()
+    # print len(parse_info())
+    # print get_gateway()
+    # print get_user_pw()
+    # for upw in get_user_pw():
+    #     if upw[0].lower() == 'n/a' or 'blank' in upw[0].lower():
+    #         print upw
+    # print parse_default_ip()
+    # print get_user_pw_by_co('D-link')
+    # print len(get_user_pw_by_co('D-link'))
+    # print get_user_pw_by_model('DIR-655')
+    print get_models()
+    print len(get_models())
+    print get_manufacturer()

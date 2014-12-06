@@ -85,7 +85,6 @@ def scan_device(ip, gateway):
 	"""
 	scan = subprocess.Popen(["nmap", "-sS", str(ip)],stdout=subprocess.PIPE, stderr=subprocess.PIPE, ).communicate()[0]
 	scanlist = scan.split()
-	print scan
 
 	if "Host is up" not in scan:
 		return models.Host(is_down=True)

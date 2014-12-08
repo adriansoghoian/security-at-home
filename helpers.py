@@ -6,7 +6,19 @@ import netifaces
 import netaddr
 import csv
 import re
+from uuid import getnode as get_mac
 
+def get_manufacturer():
+    mac = str(hex(get_mac()))[0:6]
+    man_list = []
+    print mac
+    regex = re.compile("(?P<mac_add>[0-9A-Fa-f]{6})\s*.*(?P<man_name>.*)")
+    with open('ref/oui.txt','r') as mac_file:
+        for row in mac_file:
+            m = regex.match(row)
+            if m:
+                man_list.append((m.group('mac_add'),(m.group('man_name'))))
+    return man_list
 
 def parse_info():
     """
@@ -23,6 +35,16 @@ def parse_info():
                 row[5] = ''
             pw_list.append(tuple(row))
     return pw_list
+
+def get_models():
+    parsed = parse_info()
+    regex = re.compile('[^a-zA-Z0-9]')
+    model_list = set()
+    for router in parsed:
+        if router[1]  != '':
+            model_list.add(regex.sub('',router[1].lower()))
+    return model_list
+
 
 def parse_default_ip():
     """
@@ -90,8 +112,6 @@ def get_ip_by_co(co_name):
                 co_ip.add((ip[4],ip[5]))
     return co_ip
 
-
-
 global address
 global netmask
 
@@ -129,15 +149,18 @@ def ip_cidr():
     return str(cidr.network) + '/' + str(cidr).split('/')[1]
 
 if __name__ == "__main__":
-    print ip_cidr()
-    print parse_info()
-    print len(parse_info())
-    print get_gateway()
-    print get_user_pw()
-    for upw in get_user_pw():
-        if upw[0].lower() == 'n/a' or 'blank' in upw[0].lower():
-            print upw
-    print parse_default_ip()
-    print get_user_pw_by_co('D-link')
-    print len(get_user_pw_by_co('D-link'))
-    print get_user_pw_by_model('DIR-655')
+    # print ip_cidr()
+    # print parse_info()
+    # print len(parse_info())
+    # print get_gateway()
+    # print get_user_pw()
+    # for upw in get_user_pw():
+    #     if upw[0].lower() == 'n/a' or 'blank' in upw[0].lower():
+    #         print upw
+    # print parse_default_ip()
+    # print get_user_pw_by_co('D-link')
+    # print len(get_user_pw_by_co('D-link'))
+    # print get_user_pw_by_model('DIR-655')
+    print get_models()
+    print len(get_models())
+    print get_manufacturer()

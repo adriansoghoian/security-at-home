@@ -22,7 +22,7 @@ class Report:
 	def get_nvd_url(cls, host):
 		manufacturer_str = host.manufacturer
 		if " " in manufacturer_str:
-			manufacturer_str = manufacturer_str.replace(" ", "+")
+			manufacturer_str = manufacturer_str.split(" ")[0]
 		url = "https://web.nvd.nist.gov/view/vuln/search-results?query=%s&search_type=all&cves=on" % (manufacturer_str)
 		return url
 

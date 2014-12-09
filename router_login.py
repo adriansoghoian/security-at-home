@@ -13,6 +13,7 @@ def is_router_secure():
     """
     Returns a boolean indicating whether the user has updated their default login credentials. 
     """
+    return testDIR855()
 
 
 #Variables for DIR-605L

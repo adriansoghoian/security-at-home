@@ -22,14 +22,15 @@ def main():
 	Overall method.  
 	"""
 	ip_range = helpers.ip_cidr()
-	print ip_range
+    print "The ip range scanning over is: ", ip_range
 	gateway_ip = helpers.get_gateway()
-	print gateway_ip
+	print "The gateway IP is: ", gateway_ip
 
 	active_hosts = scanner.scan_network(ip_range, gateway=gateway_ip)
-	print len(active_hosts)
+	print "There are %s many active hosts detected." % (len(active_hosts))
+    print "Here are the active host IPs: "
 	for each in active_hosts:
-		print each
+		print each.ip
 	# host = scanner.scan_device(ip)
 	report = models.Report(active_hosts)
 	report.generate()

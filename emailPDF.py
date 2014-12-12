@@ -8,6 +8,17 @@ import glob
 from email.mime.application import MIMEApplication
 
 
+def is_rpi():
+    """
+    Uses -release file to find if device is running Raspbian
+    (Assuming this will be the only distro that we will work with, for now)
+    :return: boolean
+    """
+    with open(glob.glob('/etc/*-release')[0], 'r') as f:
+	for line in f:
+		if line.contains('NAME') and line.contains('Raspbian'):
+			return True
+    return False
 
 
 def send():

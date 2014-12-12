@@ -15,7 +15,6 @@ def is_router_secure():
     """
     return testDIR855()
 
-
 #Variables for DIR-605L
 
 user= 'admin' #not used here

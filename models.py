@@ -9,8 +9,9 @@ from reportlab.lib.units import inch
 class Report:
 	title = "Canary Cyber Security Report"
 
-	def __init__(self, hosts):
+	def __init__(self, hosts, router_status=True):
 		self.hosts = hosts
+		self.router_status = router_status
 		self.title = str(datetime.datetime.now()) + ".pdf"
 		self.template = SimpleDocTemplate("reports/" + self.title,pagesize=letter,
                         rightMargin=72,leftMargin=72,
@@ -50,7 +51,10 @@ class Report:
 					string = "<font size=16><b>Your router:</b></font>"
 					Story.append(Paragraph(string, self.styles['Normal']))
 					Story.append(Spacer(1, 16))
-					string = "<font size=12><b>Admin Page Status: </b>" + "TBD</font>"
+					if self.router_status:
+						string = "<font size=12><b>Admin Page Status: </b>" + "Not secured</font>"
+					else:
+						string = "<font size=12><b>Admin Page Status: </b>" + "Is secured.</font>"
 
 				if i == 1: 
 					string = "<font size=16><b>Your devices:</b></font>"

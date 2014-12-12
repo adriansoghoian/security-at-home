@@ -16,7 +16,7 @@ def is_rpi():
     """
     with open(glob.glob('/etc/*-release')[0], 'r') as f:
 	for line in f:
-		if line.contains('NAME') and line.contains('Raspbian'):
+		if 'NAME' in line and 'Raspbian' in line:
 			return True
     return False
 

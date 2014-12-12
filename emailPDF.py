@@ -23,7 +23,7 @@ def is_rpi():
 
 def send():
     sender=(u'Canary RPi', 'canary.netsec@gmail.com')
-    recipients=['chiqomar@gmail.com', 'oza4@cornell.edu']
+    recipients=['oza4@cornell.edu','nr365@cornell.edu','gt286@cornell.edu','ams767@cornell.edu']
     subject=u'PDF from RPi'
     text_content=u'Attached PDF'
     preferred_encoding='iso-8859-1'
@@ -35,7 +35,7 @@ def send():
     fp = open(newest_report, 'rb')
     pdf = MIMEApplication(fp.read())
     fp.close()
-    pdf.add_header('Content-Disposition', 'attachment',filename='latest_report.pdf')
+    pdf.add_header('Content-Disposition', 'attachment',filename=newest_report)
     payload, mail_from, rcpt_to, msg_id=pyzmail.compose_mail(\
             sender, \
             recipients, \
@@ -59,7 +59,7 @@ def send():
         if ret:
             print 'failed recipients:', ', '.join(ret.keys())
         else:
-            print 'success'
+            print 'PDF emailed'
     else:
         print 'error:', ret
 

@@ -58,7 +58,7 @@ class Report:
                     Story.append(Paragraph(string, self.styles['Normal']))
                     Story.append(Spacer(1, 16))
                     if self.router_status:
-                        string = "<font size=12><b>Admin Page Status: </b>" + "Not secured</font>"
+                        string = "<font color=red size=12><b>Admin Page Status: </b>" + "Not secured</font>"
                     else:
                         string = "<font size=12><b>Admin Page Status: </b>" + "Is secured.</font>"
 
@@ -87,9 +87,9 @@ class Report:
                     Story.append(Paragraph(string, self.styles['Normal']))
                     Story.append(Spacer(1, 12))
 
-                string = "<font size=12><b>Number of open ports:</b> " + str(len(host.open_ports)) + ".</font>"
+                string = "<font size=12><b>Number of open ports:</b> " + str(len(host.open_ports)) + "</font>"
                 if len(host.open_ports) > 0:
-                    string += "Please seek ways to close more ports. "
+                    string += "<font color=red>Please seek ways to close more ports.</font>"
                     Story.append(Paragraph(string, self.styles['Normal']))
                     Story.append(Spacer(1, 12))
                     port_data = [["NUMBER", "SERVICE", "NOTES"]]

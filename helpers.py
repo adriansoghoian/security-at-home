@@ -139,6 +139,9 @@ def get_gateway():
     if netifaces.gateways()['default'][netifaces.AF_INET]:
         return netifaces.gateways()['default'][netifaces.AF_INET][0]
 
+def is_gateway(ip_address):
+    return ip_address == get_gateway()
+
 def ip_cidr():
     """
     Will calculate a CIDR-based IP address using the active interface's IP.

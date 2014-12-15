@@ -1,3 +1,5 @@
+import router_login
+
 __author__ = "Adrian Soghoian & Omar Ahmad"
 
 import requests
@@ -8,20 +10,6 @@ import models
 
 import emailPDF
 
-
-def update_server(os_list, router_secure):
-    """
-    Legacy code. Remove at some point.
-    """
-    if router_secure:
-        router_status = "Secure"
-    else:
-        router_status = "Insecure"
-    os_list = "_".join(os_list)
-    payload = {'router_status': router_status, 'key2': os_list}
-    requests.post("http://finch-security.herokuapp.com/refresh", data=payload)
-
-
 def main():
     """
     Overall method.
@@ -30,7 +18,6 @@ def main():
     print "The ip range scanning over is: ", ip_range
     gateway_ip = helpers.get_gateway()
     print "The gateway IP is: ", gateway_ip
-
     active_hosts = scanner.scan_network(ip_range, gateway=gateway_ip)
     print "There are %s many active hosts detected." % (len(active_hosts))
     print "Here are the active host IPs: "

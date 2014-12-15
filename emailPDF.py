@@ -14,10 +14,11 @@ def is_rpi():
     (Assuming this will be the only distro that we will work with, for now)
     :return: boolean
     """
-    with open(glob.glob('/etc/*-release')[0], 'r') as f:
-	for line in f:
-		if 'NAME' in line and 'Raspbian' in line:
-			return True
+    if glob.glob('/etc/*-release'):
+        with open(glob.glob('/etc/*-release')[0], 'r') as f:
+            for line in f:
+                if 'NAME' in line and 'Raspbian' in line:
+                    return True
     return False
 
 

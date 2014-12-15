@@ -1,8 +1,10 @@
-import reference, datetime 
+import reference, datetime
+import os
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.enums import TA_JUSTIFY
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
+from reportlab.platypus import Paragraph, Spacer, Image, Table, TableStyle, PageTemplate, \
+    BaseDocTemplate, Frame
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 
@@ -12,7 +14,8 @@ class Report:
 	def __init__(self, hosts):
 		self.hosts = hosts
 		self.title = str(datetime.datetime.now()) + ".pdf"
-		self.template = SimpleDocTemplate("reports/" + self.title,pagesize=letter,
+		self.template = BaseDocTemplate("reports/" + self.title,
+                        pageTemplates=[PageTemplate(id="first_page", frames=[Frame(inch, inch, 6.5*inch, 9*inch,topPadding=.5*inch, showBoundary=0)], onPage=FirstPageSetup, pagesize=letter)],
                         rightMargin=72,leftMargin=72,
                         topMargin=72,bottomMargin=18, 
                         font ='Courier',fontSize=12)
@@ -31,8 +34,8 @@ class Report:
 		logo = "canary.png"
 		self.styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
-		title = "<font size=24><b>%s</b></font>" % (Report.title)
-		Story.append(Paragraph(title, self.styles['Normal']))
+		#title = "<font size=24><b>%s</b></font>" % (Report.title)
+		#Story.append(Paragraph(title, self.styles['Normal']))
 		Story.append(Spacer(1, 24))
 
 		string = """<font size=12>Here is a status report about your home network. 
@@ -95,6 +98,11 @@ class Report:
 				if i > 0 and i < len(self.hosts) - 1:
 					Story.append(Paragraph("###########################################", self.styles['Normal']))
 		self.template.build(Story)
+
+def FirstPageSetup(canvas, doc):
+    canvas.saveState()
+    canvas.drawImage(os.path.curdir + "/res/report_base.png",0,0,width=8.5*inch,height=11.0*inch)
+    canvas.restoreState()
 
 class Host:
 	count = 0

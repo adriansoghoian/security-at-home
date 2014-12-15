@@ -175,7 +175,7 @@ if __name__ == "__main__":
     # print get_gateway()
     # print get_user_pw()
     # for upw in get_user_pw():
-    #     if upw[0].lower() == 'n/a' or 'blank' in upw[0].lower():
+    # if upw[0].lower() == 'n/a' or 'blank' in upw[0].lower():
     #         print upw
     # print parse_default_ip()
     # print get_user_pw_by_co('D-link')

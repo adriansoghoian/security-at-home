@@ -17,10 +17,11 @@ def main():
     print ip_range
     gateway_ip = helpers.get_gateway()
     router_status = router_login.is_router_secure()
+    print "Is router secure? ", router_login.is_router_secure()
     print gateway_ip
 
     active_hosts = scanner.scan_network(ip_range, gateway=gateway_ip)
-    print "The number of active hosts is: " + len(active_hosts)
+    print "The number of active hosts is: " + str(len(active_hosts))
     print "Here are the active hosts: "
     for each in active_hosts:
         print each

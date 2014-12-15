@@ -1,15 +1,9 @@
 __author__ = "Adrian Soghoian & Omar Ahmad"
 
-import os
-import sys
 import subprocess
-import socket
-
-from IPy import IP
 
 import reference
 import models
-import helpers
 
 
 """

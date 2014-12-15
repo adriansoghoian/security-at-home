@@ -57,11 +57,14 @@ class Report:
                     string = "<font size=16><b>Your router:</b></font>"
                     Story.append(Paragraph(string, self.styles['Normal']))
                     Story.append(Spacer(1, 16))
-                    if self.router_status:
-                        string = "<font color=red size=12><b>Admin Page Status: </b>" + "Not secured</font>"
+                    if not self.router_status:
+                        string = """<font color=red size=12><b>Admin Page Status: </b>Not secured<br/><br/>Please change \
+                        the password for your router admin page <a href='%s' color=blue>here.</a></font>""" % str(
+                            "http://" + host.ip)
                     else:
-                        string = "<font size=12><b>Admin Page Status: </b>" + "Is secured.</font>"
-
+                        string = "<font size=12><b>Admin Page Status: </b>" + "Secure</font>"
+                    Story.append(Paragraph(string, self.styles['Normal']))
+                    Story.append(Spacer(1, 16))
                 if i == 1:
                     string = "<font size=16><b>Your devices:</b></font>"
                     Story.append(Paragraph(string, self.styles['Normal']))
@@ -88,8 +91,8 @@ class Report:
                     Story.append(Spacer(1, 12))
 
                 string = "<font size=12><b>Number of open ports:</b> " + str(len(host.open_ports)) + "</font>"
-                if len(host.open_ports) > 0:
-                    string += "<font color=red>Please seek ways to close more ports.</font>"
+                if len(host.open_ports) > 3:
+                    string += "<font color=red>  Please seek ways to close more ports.</font>"
                     Story.append(Paragraph(string, self.styles['Normal']))
                     Story.append(Spacer(1, 12))
                     port_data = [["NUMBER", "SERVICE", "NOTES"]]
@@ -149,7 +152,7 @@ class Host:
 
 
 class Router(Host):
-    def __init__(self, is_secured=False, os="Unknown", ip="Unknown", manufacturer="Unknown", mac_address="Unknown",
+    def __init__(self, is_secured=True, os="Unknown", ip="Unknown", manufacturer="Unknown", mac_address="Unknown",
                  open_ports=[], is_down=False):
         Host.__init__(self, os, ip, manufacturer, mac_address, open_ports, is_down)
         self.is_secured = is_secured

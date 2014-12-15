@@ -1,4 +1,3 @@
-import csv
 import re
 
 __author__ = "Adrian Soghoian & Omar Ahmad"
@@ -15,12 +14,11 @@ def is_router_secure():
     """
     return testDIR855()
 
+# Variables for DIR-605L
 
-#Variables for DIR-605L
-
-user= 'admin' #not used here
-pw = '' #YAY! encoding nothing!, for now
-fake_pw = 'fadsas' #need to try something that doesn't work, to compare the results
+user = 'admin'  # not used here
+pw = ''  # YAY! encoding nothing!, for now
+fake_pw = 'fadsas'  # need to try something that doesn't work, to compare the results
 
 
 def testDIR605L():
@@ -40,13 +38,14 @@ def testDIR605L():
             print "Probing the router admin page failed; perhaps the URL is incorrect."
             return True
 
+
 def testDIR855():
     global html
     global soup
     credentials = helpers.get_default_credentials()[0]
     with Browser('phantomjs') as browser:
         url = 'http://' + helpers.get_gateway()
-        #url = 'http://www.support.dlink.com/emulators/dir855/login.html'
+        # url = 'http://www.support.dlink.com/emulators/dir855/login.html'
         try:
             browser.visit(url)
             html = browser.html
@@ -60,8 +59,8 @@ def testDIR855():
             #browser.fill('new_password', credentials[1])
 
             button.click()
-            if (browser.is_text_present('Internet Connection Setup Wizard')
-                or browser.is_text_present('Device Information')):
+            if (browser.is_text_present('INTERNET CONNECTION SETUP WIZARD')
+                or browser.is_text_present('DEVICE INFORMATION')):
                 return False
             else:
                 return True
@@ -91,6 +90,7 @@ def testRouter():
             return True
     return None
 
+
 def input_fields():
     input_fields = []
     for inputs in soup.form.find_all('input'):
@@ -112,35 +112,28 @@ def option_field():
 
 
 def user_field(user_name):
-    user_cand = ['user','name','login']
+    user_cand = ['user', 'name', 'login']
     inputs = input_fields()
 
     return None
-
 
 
 def pw_field(pw):
     soup.find
     return None
 
+
 def find_model():
     model_cand = []
     regex = re.compile('[^a-zA-Z0-9]')
-    html_parse = regex.sub('',html.lower())
+    html_parse = regex.sub('', html.lower())
     for model in helpers.get_models():
         if model in html_parse:
             model_cand.append(model)
     return model_cand
 
+
 if __name__ == "__main__":
-    #testRouter()
+    # testRouter()
     print testDIR855()
-    global soup
-    print option_field()
-    print input_fields()
-    print find_model()
-    for inputs in soup.form.find_all('input'):
-            if inputs.get('type') == '':
-                print inputs.get('id'),inputs.get('value').strip()
-    for div in soup.find_all('div'):
-        print div.get('style')
+

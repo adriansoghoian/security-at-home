@@ -2,4 +2,8 @@
 *.pdf
 .DS_Store
 .idea
+<<<<<<< HEAD
 ghostdriver.log
+=======
+ghostdriver.log
+>>>>>>> 6ded9566318eeff70abd283ecffa48009efb554e

@@ -1,36 +1,37 @@
 .chart-gauge {
-  width: 400px;
-  height: 200px;
-  margin: 0px auto;
+    width: 400px;
+    height: 200px;
+    margin: 0px auto;
 }
 
 .chart-color1 {
-  fill: #009933;
+    fill: #009933;
 }
 
 .chart-color2 {
-  fill: #FFFF19;
+    fill: #FFFF19;
 }
 
 .chart-color3 {
-  fill: #FF1919;
+    fill: #FF1919;
 }
 
 .needle,
 .needle-center {
-  fill: #464A4F;
+    fill: #464A4F;
 }
 
 .node-graph {
-  width: 400px;
-  height: 400px;
-  margin: 0px auto;
+    width: 400px;
+    height: 400px;
+    margin: 0px auto;
 }
 
-.node circle{
+.node circle {
     stroke: #fff;
     stroke-width: 1.5px;
 }
+
 .link {
     stroke: #999;
     stroke-opacity: .6;
@@ -42,10 +43,11 @@
 }
 
 #left {
-	float: left;
-	min-width: 200px;
+    float: left;
+    min-width: 200px;
 }
+
 #logo {
-	float: left;
-	min-width: 40px;
+    float: left;
+    min-width: 40px;
 }

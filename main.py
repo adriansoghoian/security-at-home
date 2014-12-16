@@ -7,12 +7,14 @@ import helpers
 import models
 
 import emailPDF
+import os
 
 
 def main():
     """
 	Overall method.  
 	"""
+
     ip_range = helpers.ip_cidr()
     print ip_range
     gateway_ip = helpers.get_gateway()
@@ -33,5 +35,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if os.getuid() == 0:
+        main()
+    else:
+        print 'Please run as root'
 

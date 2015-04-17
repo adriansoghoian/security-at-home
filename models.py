@@ -77,7 +77,7 @@ class Report:
                 string = "<font size=16><b>Your devices:</b></font>"
                 Story.append(Paragraph(string, self.styles['Normal']))
                 Story.append(Spacer(1, 16))
-            string = "<font size=12><b>MAC Address:</b> " + host.mac_address
+            string = "<font size=12><b>MAC Address:</b> " + host.mac_address + "</font>"
             Story.append(Paragraph(string, self.styles['Normal']))
             Story.append(Spacer(1, 12))
 

@@ -13,6 +13,7 @@ def is_router_secure():
     Returns a boolean indicating whether the user has updated their default login credentials. 
     """
     return testDIR855()
+   #return testRouter()
 
 # Variables for DIR-605L
 
@@ -73,6 +74,17 @@ def testDIR855():
 
 
 def testRouter():
+    """
+    TODO
+    This function will test a router to see if it can be logged into with default credentials
+    The problem, at least with D-Link routers, and Vizio, is that they all have weird ways of logging in
+    Rather than the simple user/pw combo typed in, some have selection boxes, some are already filled in,
+    And in the case of the Vizio, by default DOES NOT REQUIRE LOG IN...
+    Basically, the code is really annoying to make it completely viable
+    For reference, the Hydra project has some code for this as well, and is where the password list came from
+    https://www.thc.org/thc-hydra/
+    https://github.com/vanhauser-thc/thc-hydra 
+    """
     global html
     global soup
     with Browser('phantomjs') as browser:
